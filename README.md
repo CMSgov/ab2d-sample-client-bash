@@ -76,6 +76,17 @@ Then run the following command
 `source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --contract ABCDE --directory /opt/foo --since 2020-04-01T09:00:00.000--05:00 &&
  ./start-job.sh && ./monitor-job.sh && ./download-results.sh`
 
+## Creating the Base64 credentials file
+
+1. Set the OKTA_CLIENT_ID and OKTA_CLIENT_PASSWORD
+   ```bash
+   OKTA_CLIENT_ID=<client id>
+   OKTA_CLIENT_PASSWORD=<client password>
+   ```
+1. Set the `AUTH_FILE=<auth-file>`
+1. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
+   and copy it to a file. Example file: `auth-token.base64` or `my-orgs-creds.base64`.
+
 
 ## Scripts Included
 

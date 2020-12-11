@@ -23,8 +23,8 @@ This script will not overwrite already existing export files.
 
 ```
 Usage: 
-  bootstrap (-prod | -sandbox) --auth <base64 username:password> [--contract <contract number>] [--directory <dir>]
-  run-job (-prod | -sandbox) --auth <base64 username:password> [--contract <contract number>] [--directory <dir>]
+  bootstrap (-prod | -sandbox) --auth <base64 username:password> [--contract <contract number>] [--directory <dir>] [--since <since>]
+  run-job (-prod | -sandbox) --auth <base64 username:password> [--contract <contract number>] [--directory <dir>] [--since <since>]
   start-job
   monitor-job
   download-results
@@ -36,7 +36,19 @@ Arguments:
             credentials. The path must end in ".base64"
   --contract -- if searching specific contract then give contract number ex. Z0001
   --directory -- if you want files and job info saved to specific directory
+  --since -- if you only want data after a certain date specify this parameter.
+            The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
+            Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
 ```
+
+Since:
+
+If you only want data after a certain date use the `--since` parameter. The expected format follows the typical
+ISO date time format of `yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ`
+
+Examples:
+1. March 1, 2020 at 3 PM EST -> `2020-03-01T15:00:00.000-05:00`
+2. May 31, 2020 at 4 AM PST `2020-05-31T04:00:00-08:00`
 
 Files:
 
@@ -55,10 +67,11 @@ If you want to:
 1. Start a job running against production
 1. Using credentials in `my-orgs-creds.base64`
 1. Pull a specific contract named 'ABCDE'
-1. And save all results for this job to the directory /opt/foo
+1. Save all results for this job to the directory /opt/foo
+1. And only get data after April 1st 2020 at 9:00 AM Eastern Time
 
 Then run the following command
-`source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --contract ABCDE --directory /opt/foo &&
+`source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --contract ABCDE --directory /opt/foo --since 2020-04-01T09:00:00.000--05:00 &&
  ./start-job.sh && ./monitor-job.sh && ./download-results.sh`
 
 
@@ -90,7 +103,7 @@ For this example the job is run against sandbox.
 1. Set the `AUTH_FILE=<auth-file>` 
 1. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
 and copy it to a file. Example file: `auth-token.base64`.
-1. Run `source bootstrap.sh -prod --directory <directory> --auth $AUTH_FILE` to set environment variables for a job.
+1. Run `source bootstrap.sh -prod --directory <directory> --auth $AUTH_FILE --since 2020-01-01T00:00:00.000-05:00` to set environment variables for a job.
 1. Run `./start-job.sh` to start a job. If successful a file containing
 the job id will be saved in `<directory>/jobId.txt`
 1. Run `./monitor-job.sh` which will monitor the state of the running job. When the job
@@ -108,4 +121,4 @@ will not overwrite the files but will also not download anything.
 1. Set the `AUTH_FILE=<auth-file>` 
 1. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
 and copy it to a file. Example file: `auth-token.base64`.
-1. Run `./run-job.sh -prod --directory <directory> --auth $AUTH_FILE` to start, monitor, and download results from a job.
+1. Run `./run-job.sh -prod --directory <directory> --auth $AUTH_FILE --since 2020-01-01T00:00:00.000-05:00` to start, monitor, and download results from a job.

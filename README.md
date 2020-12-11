@@ -32,8 +32,8 @@ Usage:
 Arguments:
   -sandbox -- if running against ab2d sandbox environment
   -prod -- if running against ab2d production environment
-  --auth -- base64 encoded "clientid:password" OR a path to a file containing the base64
-            credentials. The path must end in ".base64"
+  --auth -- the path to a file base64 containing the base64
+            credentials encoded as "clientid:password".
   --contract -- if searching specific contract then give contract number ex. Z0001
   --directory -- if you want files and job info saved to specific directory
   --since -- if you only want data after a certain date specify this parameter.

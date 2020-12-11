@@ -43,12 +43,14 @@ Arguments:
 
 Since:
 
+The earliest date that since works for is February 13th, 2020. Specifically: `2020-02-13T00:00:00.000-05:00`
+
 If you only want data after a certain date use the `--since` parameter. The expected format follows the typical
 ISO date time format of `yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ`
 
 Examples:
 1. March 1, 2020 at 3 PM EST -> `2020-03-01T15:00:00.000-05:00`
-2. May 31, 2020 at 4 AM PST `2020-05-31T04:00:00-08:00`
+2. May 31, 2020 at 4 AM PST -> `2020-05-31T04:00:00-08:00`
 
 Files:
 
@@ -103,7 +105,7 @@ For this example the job is run against sandbox.
 1. Set the `AUTH_FILE=<auth-file>` 
 1. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
 and copy it to a file. Example file: `auth-token.base64`.
-1. Run `source bootstrap.sh -prod --directory <directory> --auth $AUTH_FILE --since 2020-01-01T00:00:00.000-05:00` to set environment variables for a job.
+1. Run `source bootstrap.sh -prod --directory <directory> --auth $AUTH_FILE --since 2020-02-13T00:00:00.000-05:00` to set environment variables for a job.
 1. Run `./start-job.sh` to start a job. If successful a file containing
 the job id will be saved in `<directory>/jobId.txt`
 1. Run `./monitor-job.sh` which will monitor the state of the running job. When the job
@@ -121,4 +123,5 @@ will not overwrite the files but will also not download anything.
 1. Set the `AUTH_FILE=<auth-file>` 
 1. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
 and copy it to a file. Example file: `auth-token.base64`.
-1. Run `./run-job.sh -prod --directory <directory> --auth $AUTH_FILE --since 2020-01-01T00:00:00.000-05:00` to start, monitor, and download results from a job.
+1. Run `./run-job.sh -prod --directory <directory> --auth $AUTH_FILE --since 2020-02-13T00:00:00.000-05:00` to start,
+   monitor, and download results from a job.

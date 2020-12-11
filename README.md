@@ -36,17 +36,17 @@ Arguments:
             credentials encoded as "clientid:password".
   --contract -- if searching specific contract then give contract number ex. Z0001
   --directory -- if you want files and job info saved to specific directory
-  --since -- if you only want data after a certain date specify this parameter.
+  --since -- if you only want claims data updated or filed after a certain date specify this parameter.
             The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
             Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
 ```
 
 Since:
 
-The earliest date that since works for is February 13th, 2020. Specifically: `2020-02-13T00:00:00.000-05:00`
-
-If you only want data after a certain date use the `--since` parameter. The expected format follows the typical
+If you only want claims data updated or filed after a certain date use the `--since` parameter. The expected format follows the typical
 ISO date time format of `yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ`
+
+The earliest date that since works for is February 13th, 2020. Specifically: `2020-02-13T00:00:00.000-05:00`.
 
 Examples:
 1. March 1, 2020 at 3 PM EST -> `2020-03-01T15:00:00.000-05:00`

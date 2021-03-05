@@ -23,22 +23,24 @@ This script will not overwrite already existing export files.
 
 ```
 Usage: 
-  bootstrap (-prod | -sandbox) --auth <base64 username:password> [--contract <contract number>] [--directory <dir>] [--since <since>]
-  run-job (-prod | -sandbox) --auth <base64 username:password> [--contract <contract number>] [--directory <dir>] [--since <since>]
+  bootstrap (-prod | -sandbox) --auth <base64 username:password> [--contract <contract number>] [--directory <dir>] [--since <since>] [--fhir (STU3 | R4)]
+  run-job (-prod | -sandbox) --auth <base64 username:password> [--contract <contract number>] [--directory <dir>] [--since <since>] [--fhir (STU3 | R4)]
   start-job
   monitor-job
   download-results
 
 Arguments:
-  -sandbox -- if running against ab2d sandbox environment
-  -prod -- if running against ab2d production environment
-  --auth -- the path to a file base64 containing the base64
-            credentials encoded as "clientid:password".
-  --contract -- if searching specific contract then give contract number ex. Z0001
+  -sandbox    -- if running against ab2d sandbox environment
+  -prod       -- if running against ab2d production environment
+  --auth      -- the path to a file base64 containing the base64
+                 credentials encoded as "clientid:password".
+  --contract  -- if searching specific contract then give contract number ex. Z0001
   --directory -- if you want files and job info saved to specific directory
-  --since -- if you only want claims data updated or filed after a certain date specify this parameter.
-            The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
-            Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
+  --since     -- if you only want claims data updated or filed after a certain date specify this parameter.
+                 The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
+                 Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
+  --fhir      -- if you want to specify the FHIR version (STU3 is the default)
+
 ```
 
 Since:

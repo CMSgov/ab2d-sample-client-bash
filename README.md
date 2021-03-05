@@ -11,7 +11,10 @@ Use of these clients in the sandbox environment, can allow for testing, and if a
 
 These clients are provided as examples, but they are fully functioning (with some modifications) in the production environment. Feel free to use them as a reference. When used in production (even for testing purposes), these clients have the ability to download PII/PHI information. You should therefore ensure the environment in which these scripts are run is secured in a way to allow for storage of PII/PHI. Additionally, when used in the production environment the scripts will require use of your production credentials. As such, please ensure that your credentials are handled in a secure manner and not printed to logs or the terminal. Ensuring the privacy of data is the responsibility of each user and/or organization.
 
+## Prerequisites
 
+`jq` must be installed. It is usually installed in a linux environment but on a MacOS, 
+you can install it by typing `brew install jq`
 
 ## Bash Client
 

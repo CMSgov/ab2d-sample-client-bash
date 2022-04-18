@@ -11,7 +11,7 @@ fi
 echo "Using okta url: $IDP_URL"
 echo "Connecting to AB2D API at: $API_URL"
 echo "Saving data to: $DIRECTORY"
-echo "Optional contract parameter: $CONTRACT"
+echo "FHIR Version: $FHIR_VERSION"
 
 echo "Starting job"
 

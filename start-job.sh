@@ -2,7 +2,6 @@
 # Parameters:
 #   1 - URL to run against
 #   2 - Base64 encoded clientId:clientPassword
-#   3 - The contract number (Optional)
 
 source fn_get_token.sh
 
@@ -14,15 +13,7 @@ then
   exit 1
 fi
 
-# If a contract number is provided only pull for the specified contract
-if [ "$CONTRACT" != '' ]
-then
-    URL="${API_URL}/Group/$CONTRACT/\$export?_outputFormat=application%2Ffhir%2Bndjson&_type=ExplanationOfBenefit"
-    echo "Getting contract $CONTRACT"
-# If no contract number then pull all contracts that the provided bearer token has access too
-else
-    URL="${API_URL}/Patient/\$export?_outputFormat=application%2Ffhir%2Bndjson&_type=ExplanationOfBenefit"
-fi
+URL="${API_URL}/Patient/\$export?_outputFormat=application%2Ffhir%2Bndjson&_type=ExplanationOfBenefit"
 
 # If a date is provided
 if [ "$SINCE" != '' ]; then

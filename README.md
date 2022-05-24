@@ -3,9 +3,13 @@
 
 Our API Clients are open source. This repo contains *sample* Bash script which demonstrate how to pull data from the AB2D API Production environment.
 
-This may be a great starting point for your engineering or development teams however it is important to note that the AB2D team does **not** regularly maintain the sample clients. Additionally, a best-effort was made to ensure the clients are secure but they have **not** undergone comprehensive formal security testing. Each user/organization is responsible for conducting their own review and testing prior to implementation
+This may be a great starting point for your engineering or development teams however it is important to note that the AB2D team does **not** regularly maintain the sample clients. Additionally, a best-effort was made to ensure the clients are secure, but they have **not** undergone comprehensive formal security testing. Each user/organization is responsible for conducting their own review and testing prior to implementation
 
-Use of these clients in the sandbox environment, can allow for testing, and if a mistake is made no PII/PHI is compromised. The sandbox environment is publicly available and all of the data in it is synthetic (**not** real)
+Use of these clients in the sandbox environment allows for safe testing and ensures no PII/PHI will not be compromised if a mistake is made.
+The sandbox environment is publicly available and all the data in it is synthetic (**not** real)
+
+AB2D supports both R4 and STU3 versions of the FHIR standard. FHIR R4 is available using v2 of AB2D while FHIR STU3 can 
+be accessed via AB2D v1. Accordingly, this client supports both R4/v2 and STU3/v1.
 
 ## Production Use Disclaimer:
 
@@ -13,21 +17,21 @@ These clients are provided as examples, but they are fully functioning (with som
 
 ## Prerequisites
 
-`jq` must be installed. It is usually installed in a linux environment but on a MacOS, 
+`jq` must be installed. It is usually installed in a linux environment but on a macOS, 
 you can install it by typing `brew install jq`
 
 ## Bash Client
 
 A simple client for starting a job in sandbox or production, monitor that job,
 and download the results. To prevent issues these scripts persist the job
-id and list of files generated.
+id and list of files generated. This client supports both R4 (v2) and STU3 (v1) of the standard.
 
 This script will not overwrite already existing export files.
 
 ```
 Usage: 
-  bootstrap (-prod | -sandbox) --auth <base64 username:password> [--contract <contract number>] [--directory <dir>] [--since <since>] [--fhir (STU3 | R4)]
-  run-job (-prod | -sandbox) --auth <base64 username:password> [--contract <contract number>] [--directory <dir>] [--since <since>] [--fhir (STU3 | R4)]
+  bootstrap (-prod | -sandbox) --auth <auth.base64> [--directory <dir>] [--since <since>] --fhir (STU3 | R4)
+  run-job (-prod | -sandbox) --auth <auth.base64> [--directory <dir>] [--since <since>] --fhir (STU3 | R4)
   start-job
   monitor-job
   download-results
@@ -37,12 +41,11 @@ Arguments:
   -prod       -- if running against ab2d production environment
   --auth      -- the path to a file base64 containing the base64
                  credentials encoded as "clientid:password".
-  --contract  -- if searching specific contract then give contract number ex. Z0001
   --directory -- if you want files and job info saved to specific directory
   --since     -- if you only want claims data updated or filed after a certain date specify this parameter.
                  The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
                  Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
-  --fhir      -- if you want to specify the FHIR version (STU3 is the default)
+  --fhir      -- The FHIR version
 
 ```
 
@@ -51,7 +54,13 @@ Since:
 If you only want claims data updated or filed after a certain date use the `--since` parameter. The expected format follows the typical
 ISO date time format of `yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ`
 
-The earliest date that since works for is February 13th, 2020. Specifically: `2020-02-13T00:00:00.000-05:00`.
+For requests using FHIR R4, a default `_since` value is supplied if one is not provided. The value of the default `_since`
+parameter is set to the creation date and time of a contract's last successfully searched and downloaded job.
+
+The earliest date that `_since` works for is February 13th, 2020. Specifically: `2020-02-13T00:00:00.000-05:00`.
+
+For requests using FHIR R4, a default `_since` value is supplied if one is not provided. The value of the default `_since` 
+parameter is set to the creation date and time of a contract’s last successfully searched and downloaded job.
 
 Examples:
 1. March 1, 2020 at 3 PM EST -> `2020-03-01T15:00:00.000-05:00`
@@ -73,13 +82,17 @@ Example:
 If you want to:
 1. Start a job running against production
 1. Using credentials in `my-orgs-creds.base64`
-1. Pull a specific contract named 'ABCDE'
 1. Save all results for this job to the directory /opt/foo
 1. And only get data after April 1st 2020 at 9:00 AM Eastern Time
 
 Then run the following command
-`source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --contract ABCDE --directory /opt/foo --since 2020-04-01T09:00:00.000--05:00 &&
- ./start-job.sh && ./monitor-job.sh && ./download-results.sh`
+
+```
+source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --directory /opt/foo --fhir R4 --since 2020-04-01T09:00:00.000--05:00
+./start-job.sh 
+./monitor-job.sh 
+./download-results.sh
+ ```
 
 ## Creating the Base64 credentials file
 
@@ -96,7 +109,7 @@ Then run the following command
 ## Scripts Included
 
 1. bootstrap.sh: prepare environment variables necessary for other scripts using command line arguments
-1. start-job.sh: start a job given an auth token, contract, and environment
+1. start-job.sh: start a job given an auth token and environment
 1. monitor-job.sh: monitor a running job until it completes
 1. download-results.sh: download results from a job that has been run
 1. run-job.sh: aggregation of the first four scripts
@@ -121,7 +134,7 @@ For this example the job is run against sandbox.
 1. Set the `AUTH_FILE=<auth-file>` 
 1. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
 and copy it to a file. Example file: `auth-token.base64`.
-1. Run `source bootstrap.sh -prod --directory <directory> --auth $AUTH_FILE --since 2020-02-13T00:00:00.000-05:00` to set environment variables for a job.
+1. Run `source bootstrap.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since 2020-02-13T00:00:00.000-05:00` to set environment variables for a job.
 1. Run `./start-job.sh` to start a job. If successful a file containing
 the job id will be saved in `<directory>/jobId.txt`
 1. Run `./monitor-job.sh` which will monitor the state of the running job. When the job
@@ -139,5 +152,5 @@ will not overwrite the files but will also not download anything.
 1. Set the `AUTH_FILE=<auth-file>` 
 1. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
 and copy it to a file. Example file: `auth-token.base64`.
-1. Run `./run-job.sh -prod --directory <directory> --auth $AUTH_FILE --since 2020-02-13T00:00:00.000-05:00` to start,
+1. Run `./run-job.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since 2020-02-13T00:00:00.000-05:00` to start,
    monitor, and download results from a job.

@@ -139,8 +139,7 @@ and copy it to a file. Example file: `auth-token.base64`.
 the job id will be saved in `<directory>/jobId.txt`
 1. Run `./monitor-job.sh` which will monitor the state of the running job. When the job
 finished the full HTTP response will be saved to `<directory>/response.json`
-1. Run `./download-results.sh` to get the files. This will only download the files once. Running again
-will not overwrite the files but will also not download anything.
+1. Run `./download-results.sh` to get the files. Running again will not overwrite the files
 
 ### Running Aggregate Script
 

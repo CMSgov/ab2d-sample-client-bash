@@ -40,6 +40,7 @@ fi
 echo "Attempting to start job using $URL"
 
 RESULT=$(curl "$URL" \
+    -v \
     -sD - \
     -H "accept: application/json" \
     -H "Accept: application/fhir+json" \
@@ -69,7 +70,7 @@ fi
 echo "Monitoring job with job id $JOB"
 
 # Get the status
-RESPONSE=$(curl "${API_URL}/Job/${JOB}/\$status" -sD - -H "accept: application/json" -H "Authorization: Bearer ${BEARER_TOKEN}")
+RESPONSE=$(curl "${API_URL}/Job/${JOB}/\$status" -v -sD - -H "accept: application/json" -H "Authorization: Bearer ${BEARER_TOKEN}")
 URLS=$(echo "$RESPONSE" | grep ExplanationOfBenefit)
 
 sleep 5
@@ -85,7 +86,7 @@ do
         echo "Token expired refreshing and then attempting to check status again"
         BEARER_TOKEN=$(fn_get_token "$IDP_URL" "$AUTH_FILE")
         sleep 30
-        RESPONSE=$(curl "${API_URL}/Job/${JOB}/\$status" -sD - -H "accept: application/json" -H "Authorization: Bearer ${BEARER_TOKEN}")
+        RESPONSE=$(curl "${API_URL}/Job/${JOB}/\$status" -v -sD - -H "accept: application/json" -H "Authorization: Bearer ${BEARER_TOKEN}")
     elif [ "$HTTP_CODE" != 202 ] && [ "$HTTP_CODE" != 200 ]
     then
         echo "Error making rest call $HTTP_CODE"
@@ -109,7 +110,7 @@ do
               echo "Running for $COUNTER minutes"
             fi
 
-            RESPONSE=$(curl "${API_URL}/Job/${JOB}/\$status" -sD - -H "accept: application/json" -H "Authorization: Bearer ${BEARER_TOKEN}")
+            RESPONSE=$(curl "${API_URL}/Job/${JOB}/\$status" -v -sD - -H "accept: application/json" -H "Authorization: Bearer ${BEARER_TOKEN}")
         fi
 
     fi

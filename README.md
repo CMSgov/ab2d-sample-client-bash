@@ -126,6 +126,8 @@ For this example the job is run against sandbox.
 
 ### Running Aggregate Script
 
+This is the preferred way to run a job.
+
 1. Set the OKTA_CLIENT_ID and OKTA_CLIENT_PASSWORD
    ```bash
    OKTA_CLIENT_ID=<client id>
@@ -138,6 +140,8 @@ For this example the job is run against sandbox.
    monitor, and download results from a job.
 
 ### Running Scripts Individually
+
+This is for developer debugging purpose.
 
 1. Set the OKTA_CLIENT_ID and OKTA_CLIENT_PASSWORD
    ```bash

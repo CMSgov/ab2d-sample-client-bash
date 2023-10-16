@@ -69,8 +69,8 @@ Examples:
 Files:
 
 1. <directory>/jobId.txt -- id of the job created
-1. <directory>/response.json -- list of files to download 
-1. <directory>/*.ndjson -- downloaded results of exports 
+2. <directory>/response.json -- list of files to download 
+3. <directory>/*.ndjson -- downloaded results of exports 
 
 Limitations:
 
@@ -81,9 +81,9 @@ Example:
 
 If you want to:
 1. Start a job running against production
-1. Using credentials in `my-orgs-creds.base64`
-1. Save all results for this job to the directory /opt/foo
-1. And only get data after April 1st 2020 at 9:00 AM Eastern Time
+2. Using credentials in `my-orgs-creds.base64`
+3. Save all results for this job to the directory /opt/foo
+4. And only get data after April 1st 2020 at 9:00 AM Eastern Time
 
 Then run the following command
 
@@ -101,18 +101,18 @@ source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --directory /opt/foo --f
    OKTA_CLIENT_ID=<client id>
    OKTA_CLIENT_PASSWORD=<client password>
    ```
-1. Set the `AUTH_FILE=<auth-file>`
-1. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
+2. Set the `AUTH_FILE=<auth-file>`
+3. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
    and copy it to a file. Example file: `auth-token.base64` or `my-orgs-creds.base64`.
 
 
 ## Scripts Included
 
 1. bootstrap.sh: prepare environment variables necessary for other scripts using command line arguments
-1. start-job.sh: start a job given an auth token and environment
-1. monitor-job.sh: monitor a running job until it completes
-1. download-results.sh: download results from a job that has been run
-1. run-job.sh: aggregation of the first four scripts
+2. start-job.sh: start a job given an auth token and environment
+3. monitor-job.sh: monitor a running job until it completes
+4. download-results.sh: download results from a job that has been run
+5. run-job.sh: aggregation of the first four scripts
 
 The last script combines the first four steps into one script.
 
@@ -124,23 +124,6 @@ The last script combines the first four steps into one script.
 
 For this example the job is run against sandbox.
 
-### Running Scripts Individually
-
-1. Set the OKTA_CLIENT_ID and OKTA_CLIENT_PASSWORD
-   ```bash
-   OKTA_CLIENT_ID=<client id>
-   OKTA_CLIENT_PASSWORD=<client password>
-   ```
-1. Set the `AUTH_FILE=<auth-file>` 
-1. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
-and copy it to a file. Example file: `auth-token.base64`.
-1. Run `source bootstrap.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since 2020-02-13T00:00:00.000-05:00` to set environment variables for a job.
-1. Run `./start-job.sh` to start a job. If successful a file containing
-the job id will be saved in `<directory>/jobId.txt`
-1. Run `./monitor-job.sh` which will monitor the state of the running job. When the job
-finished the full HTTP response will be saved to `<directory>/response.json`
-1. Run `./download-results.sh` to get the files. Running again will not overwrite the files
-
 ### Running Aggregate Script
 
 1. Set the OKTA_CLIENT_ID and OKTA_CLIENT_PASSWORD
@@ -148,8 +131,25 @@ finished the full HTTP response will be saved to `<directory>/response.json`
    OKTA_CLIENT_ID=<client id>
    OKTA_CLIENT_PASSWORD=<client password>
    ```
-1. Set the `AUTH_FILE=<auth-file>` 
-1. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
-and copy it to a file. Example file: `auth-token.base64`.
-1. Run `./run-job.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since 2020-02-13T00:00:00.000-05:00` to start,
+2. Set the `AUTH_FILE=<auth-file>`
+3. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
+   and copy it to a file. Example file: `auth-token.base64`.
+4. Run `./run-job.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since 2020-02-13T00:00:00.000-05:00` to start,
    monitor, and download results from a job.
+
+### Running Scripts Individually
+
+1. Set the OKTA_CLIENT_ID and OKTA_CLIENT_PASSWORD
+   ```bash
+   OKTA_CLIENT_ID=<client id>
+   OKTA_CLIENT_PASSWORD=<client password>
+   ```
+2. Set the `AUTH_FILE=<auth-file>` 
+3. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
+and copy it to a file. Example file: `auth-token.base64`.
+4. Run `source bootstrap.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since 2020-02-13T00:00:00.000-05:00` to set environment variables for a job.
+5. Run `./start-job.sh` to start a job. If successful a file containing
+the job id will be saved in `<directory>/jobId.txt`
+6. Run `./monitor-job.sh` which will monitor the state of the running job. When the job
+finished the full HTTP response will be saved to `<directory>/response.json`
+7. Run `./download-results.sh` to get the files. Running again will not overwrite the files

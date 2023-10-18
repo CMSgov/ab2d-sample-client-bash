@@ -14,7 +14,6 @@ echo "Saving data to: $DIRECTORY"
 echo "FHIR Version: $FHIR_VERSION"
 
 # ------ Starting job
-
 echo "Starting job"
 # Parameters:
 #   1 - URL to run against
@@ -39,22 +38,25 @@ fi
 
 echo "Attempting to start job using $URL"
 
-RESULT=$(curl "$URL" \
+PATIENT_HEADERS_FILE="$DIRECTORY/patient_response_headers.txt"
+HTTP_CODE=$(curl "$URL" \
     -v \
-    -sD - \
+    -s \
+    -w "%{http_code}" \
+    -D "$PATIENT_HEADERS_FILE" \
     -H "accept: application/json" \
     -H "Accept: application/fhir+json" \
     -H "Prefer: respond-async" \
     -H "Authorization: Bearer ${BEARER_TOKEN}")
 
-echo "$RESULT"
+cat "$PATIENT_HEADERS_FILE"
 
-HTTP_CODE=$(echo "$RESULT" | grep "HTTP/" | awk  '{print $2}')
 if [ "$HTTP_CODE" != 202 ]
 then
     echo "Could not export job"
+    exit 1
 else
-    JOB=$(echo "$RESULT" | grep "\(content-location\|Content-Location\)" | sed 's/.*Job.//' | sed 's/..status//' | tr -d '[:space:]')
+    JOB=$(grep "\(content-location\|Content-Location\)" "$PATIENT_HEADERS_FILE" | sed 's/.*Job.//' | sed 's/..status//' | tr -d '[:space:]')
 
     if [ "$JOB" == '' ]
     then
@@ -65,93 +67,83 @@ else
     echo "$JOB created"
 fi
 
-
 # ------ Monitoring job
 echo "Monitoring job with job id $JOB"
 
-# Get the status
-RESPONSE=$(curl "${API_URL}/Job/${JOB}/\$status" -v -sD - -H "accept: application/json" -H "Authorization: Bearer ${BEARER_TOKEN}")
-URLS=$(echo "$RESPONSE" | grep ExplanationOfBenefit)
-
-sleep 5
-
-# If there are no results, wait x seconds and try again
-while [ "$URLS" == '' ]
-do
-    # If response is unauthorized refresh token and try again
-    HTTP_CODE=$(echo "$RESPONSE" | grep "HTTP/" | awk  '{print $2}')
-
-    if [ "$HTTP_CODE" == 403 ]
-    then
-        echo "Token expired refreshing and then attempting to check status again"
-        BEARER_TOKEN=$(fn_get_token "$IDP_URL" "$AUTH_FILE")
-        sleep 30
-        RESPONSE=$(curl "${API_URL}/Job/${JOB}/\$status" -v -sD - -H "accept: application/json" -H "Authorization: Bearer ${BEARER_TOKEN}")
-    elif [ "$HTTP_CODE" != 202 ] && [ "$HTTP_CODE" != 200 ]
-    then
-        echo "Error making rest call $HTTP_CODE"
-        echo "Exiting without saving results"
-        exit 1
-    else
-
-        echo "$RESPONSE"
-        URLS=$(echo "$RESPONSE" | grep ExplanationOfBenefit)
-
-        # Sleep and increment counter
-        if [ "$URLS" == '' ]
-        then
-            sleep 60
-
-            COUNTER=$(( COUNTER +1 ))
-
-            # Log every ten seconds
-            if [ $((COUNTER % 10)) == 0 ]
-            then
-              echo "Running for $COUNTER minutes"
-            fi
-
-            RESPONSE=$(curl "${API_URL}/Job/${JOB}/\$status" -v -sD - -H "accept: application/json" -H "Authorization: Bearer ${BEARER_TOKEN}")
-        fi
-
-    fi
-done
-
-echo "Job finished with
-$RESPONSE"
-
-echo "$RESPONSE" > "$DIRECTORY/response.json"
-
-echo "Saved response to $DIRECTORY/response.json"
-
-# ------ Download results for job
-echo "Download results for job"
-
-URLS=$(cat "$DIRECTORY/response.json" | grep ExplanationOfBenefit | jq --raw-output ".output[].url")
-
-# Download each file by url
+URLS_HEADER=""
+JOB_HEADERS_FILE="$DIRECTORY/job_response_headers.txt"
 COUNTER=0
 
-echo "List of files to download $URLS"
-
-for URL in ${URLS}
+while [ "$URLS_HEADER" == '' ]
 do
-    FILE_NAME="$DIRECTORY"/$(echo ${URL} | sed 's/.*.file.//')
+    # Sleep and increment counter
+    sleep 60
+    COUNTER=$(( COUNTER +1 ))
+    echo "Running for $COUNTER minutes"
 
-    echo "$URL"
+    HTTP_CODE=$(curl "${API_URL}/Job/${JOB}/\$status" \
+        -v \
+        -s \
+        -w "%{http_code}" \
+        -D "$JOB_HEADERS_FILE" \
+        -H "accept: application/json" \
+        -H "Authorization: Bearer ${BEARER_TOKEN}")
 
-    if [ -f "$FILE_NAME" ]
-    then
-        echo "$FILE_NAME already exists, skipping"
-    else
-        curl --header "Accept: application/fhir+ndjson" \
-          --header "Authorization: Bearer ${BEARER_TOKEN}" \
-          "$URL" > "$FILE_NAME"
+    cat "$JOB_HEADERS_FILE"
 
-        COUNTER=$(( COUNTER +1 ))
-
-        echo "Updating bearer token"
+    if [ "$HTTP_CODE" == 403 ]; then
+        # If response is unauthorized refresh token and try again
+        echo "Token expired. Refreshing and then attempting to check status again"
         BEARER_TOKEN=$(fn_get_token "$IDP_URL" "$AUTH_FILE")
+    elif [ "$HTTP_CODE" != 202 ] && [ "$HTTP_CODE" != 200 ]; then
+        echo "Error making rest call. Status code: $HTTP_CODE"
+        exit 1
+    else
+        URLS_HEADER="$(grep ExplanationOfBenefit "$JOB_HEADERS_FILE")"
     fi
 done
 
+echo "Saved response to $JOB_HEADERS_FILE"
 
+# ------ Download results for job
+echo "Downloading results for job"
+
+URLS=$(echo "$URLS_HEADER" | jq --raw-output ".output[].url")
+echo "List of files to download: $URLS"
+FILE_DOWNLOAD_HEADERS="$DIRECTORY/file_download_headers.txt"
+COUNTER=0
+
+for URL in $URLS; do
+    FILE_NAME="$DIRECTORY"/$(echo ${URL} | sed 's/.*.file.//')
+
+    echo "Downloading file from $URL"
+
+    if [ -f "$FILE_NAME" ]; then
+        echo "$FILE_NAME already exists, skipping"
+    else
+        while true; do
+            HTTP_CODE=$(curl "$URL" \
+                -w "%{http_code}" \
+                -o "$FILE_NAME" \
+                -D "$FILE_DOWNLOAD_HEADERS" \
+                -H "Accept: application/fhir+json" \
+                -H "Authorization: Bearer ${BEARER_TOKEN}")
+
+            if [ "$HTTP_CODE" == 403 ]; then
+                # If response is unauthorized refresh token and try again
+                echo "Bearer token expired. Refreshing, then attempting to download again"
+                BEARER_TOKEN=$(fn_get_token "$IDP_URL" "$AUTH_FILE")
+            elif [ "$HTTP_CODE" != 200 ]; then
+                echo "Error downloading file. Status code: $HTTP_CODE"
+                cat "$FILE_DOWNLOAD_HEADERS"
+                cat "$FILE_NAME"
+                break
+            else
+                COUNTER=$(( COUNTER +1 ))
+                break
+            fi
+        done
+    fi
+done
+
+echo "Done. Total number of files downloaded: $COUNTER"

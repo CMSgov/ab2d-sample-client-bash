@@ -86,6 +86,7 @@ while [ "$JOB_JSON" == '' ]; do
 
     cat "$JOB_HEADERS_FILE"
     cat "$JOB_RESPONSE_FILE"
+    echo  # Add newline after response output
 
     if [ "$HTTP_CODE" == 403 ]; then
         # If response is unauthorized refresh token and try again

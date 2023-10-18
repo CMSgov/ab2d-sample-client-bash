@@ -2,12 +2,6 @@
 
 source bootstrap.sh "$@"
 
-if [ "$BEARER_TOKEN" == "null" ]
-then
-    printf "Failed to retrieve bearer token is base64 token accurate?\nIs %s available from this computer?\n", $IDP_URL
-    exit 1
-fi
-
 echo "Using okta url: $IDP_URL"
 echo "Connecting to AB2D API at: $API_URL"
 echo "Saving data to: $DIRECTORY"

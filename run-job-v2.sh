@@ -122,7 +122,7 @@ for URL in $URLS; do
                 -w "%{http_code}" \
                 -o "$FILE_NAME" \
                 -D "$FILE_DOWNLOAD_HEADERS" \
-                -H "Accept: application/fhir+json" \
+                -H "Accept: application/fhir+ndjson" \
                 -H "Authorization: Bearer ${BEARER_TOKEN}")
 
             if [ "$HTTP_CODE" == 403 ]; then

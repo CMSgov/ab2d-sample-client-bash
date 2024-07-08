@@ -118,5 +118,5 @@ do
         done
     fi
 done
-find $DIRECTORY -size 0 -delete
+find "$DIRECTORY" -size 0 -delete
 echo "Done. Total number of files downloaded: $COUNTER"

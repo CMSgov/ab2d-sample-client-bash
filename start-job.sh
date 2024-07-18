@@ -20,6 +20,10 @@ if [ "$SINCE" != '' ]; then
   URL="$URL&_since=$SINCE"
 fi
 
+if [ "$UNTIL" != '' ]; then
+  URL="$URL&_until=$UNTIL"
+fi
+
 echo "Attempting to start job using $URL"
 
 RESULT=$(curl "$URL" \

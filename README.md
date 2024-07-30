@@ -67,6 +67,7 @@ For requests using FHIR R4, a default `_since` value is supplied if one is not p
 parameter is set to the creation date and time of a contract’s last successfully searched and downloaded job.
 
 Examples:
+
 1. March 1, 2020 at 3 PM EST -> `2020-03-01T15:00:00.000-05:00`
 2. May 31, 2020 at 4 AM PST -> `2020-05-31T04:00:00-08:00`
 
@@ -85,7 +86,7 @@ Example:
 
 If you want to:
 1. Start a job running against production
-2. Using credentials in `my-orgs-creds.base64`
+2. Use credentials in `my-orgs-creds.base64`
 3. Save all results for this job to the directory /opt/foo
 4. And only get data after April 1st 2020 at 9:00 AM Eastern Time
 
@@ -101,12 +102,13 @@ source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --directory /opt/foo --f
 Until:
 
 If you only want claims data updated or filed before a certain date use the `--until` parameter. The expected format follows the typical
-ISO date time format of `yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ`
+ISO date time format of `yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ`.
 
 For requests using FHIR R4, a default `_until` value is supplied if one is not provided. The value of the default `_until`
 parameter is set to the current date and time.
 
 Examples:
+
 1. March 1, 2020 at 3 PM EST -> `2020-03-01T15:00:00.000-05:00`
 2. May 31, 2020 at 4 AM PST -> `2020-05-31T04:00:00-08:00`
 
@@ -125,7 +127,7 @@ Example:
 
 If you want to:
 1. Start a job running against production
-2. Using credentials in `my-orgs-creds.base64`
+2. Use credentials in `my-orgs-creds.base64`
 3. Save all results for this job to the directory /opt/foo
 4. And only get data after April 1st 2020 at 9:00 AM Eastern Time and before June 1st 2020 at 9:00 AM Eastern Time
 

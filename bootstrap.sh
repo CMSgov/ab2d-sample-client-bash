@@ -4,7 +4,7 @@ if [ "$1" == "--help" ]
 then
   printf \
 "Usage: \n
-  <command> (-prod | -sandbox) --auth <passwordfile.base64> [--directory <dir>] [--since <since>] --fhir (R4 | STU3)\n
+  <command> (-prod | -sandbox) --auth <passwordfile.base64> [--directory <dir>] [--since <since>] [--until <until>] --fhir (R4 | STU3)\n
 Arguments:\n
   -sandbox    -- if running against ab2d sandbox environment
   -prod       -- if running against ab2d production environment
@@ -13,6 +13,10 @@ Arguments:\n
   --since     -- if you only want claims data updated or filed after a certain date specify this parameter.
                  The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
                  Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
+  --until     -- if you only want claims data updated or filed before a certain date specify this parameter.
+                 This parameter is only available with version 2 (FHIR R4) of the API.
+                 The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
+                 Example March 1, 2024 at 3 PM EST -> 2024-03-01T15:00:00.000-05:00
   --fhir      -- The FHIR version\n\n"
   exit 0;
 fi
@@ -42,6 +46,10 @@ do
       export SINCE=$(echo "$2" | sed "s/:/%3A/g")
       shift
       ;;
+    "--until")
+      export UNTIL=$(echo "$2" | sed "s/:/%3A/g")
+      shift
+      ;;
     "--fhir")
       export FHIR_VERSION=$2
       shift
@@ -61,7 +69,12 @@ then
   error=true
   printf "The FHIR version must be specified --fhir [R4 | STU3]\n"
 fi
-if ($error == true)
+if [ "${FHIR_VERSION}" == "STU3" ] && [ "${UNTIL}" != "" ]
+then
+  error=true
+  printf "The _until parameter is only available with version 2 (FHIR R4) of the API\n"
+fi
+if [ "${error}" == true ]
 then
   exit 1
 fi

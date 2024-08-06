@@ -104,8 +104,8 @@ Until:
 If you only want claims data updated or filed before a certain date use the `--until` parameter. The expected format follows the typical
 ISO date time format of `yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ`.
 
-For requests using FHIR R4, a default `_until` value is supplied if one is not provided. The value of the default `_until`
-parameter is set to the current date and time.
+This parameter is only available with V2 (FHIR R4). 
+If no `_until` date is specified or you use a date from the future, it will default to the current date and time.
 
 Examples:
 

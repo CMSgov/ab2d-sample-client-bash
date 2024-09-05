@@ -39,6 +39,7 @@ HTTP_CODE=$(echo "$RESULT" | grep "HTTP/" | awk  '{print $2}')
 if [ "$HTTP_CODE" != 202 ]
 then
     echo "Could not export job"
+    exit 1
 else
     JOB=$(echo "$RESULT" | grep "\(content-location\|Content-Location\)" | sed 's/.*Job.//' | sed 's/..status//' | tr -d '[:space:]')
 

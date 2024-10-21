@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# the -e flag tells the script to exit if any of its commands exit with a non zero code.
+# For instance, if any of the subscripts exit with a 1 (like if we fail to export a job)
+# we should exit this script automatically. 
+set -e
+
 source bootstrap.sh "$@"
 
 if [ "$BEARER_TOKEN" == "null" ]

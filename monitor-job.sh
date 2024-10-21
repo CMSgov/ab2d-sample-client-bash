@@ -11,6 +11,12 @@ fi
 
 JOB=$(cat "$DIRECTORY/jobId.txt")
 
+if [ "$JOB" == "" ]
+then
+    printf "Failed to retrieve job ID from jobId.txt\n"
+    exit 1
+fi
+
 echo "Id of job being monitored $JOB"
 
 # Get the status

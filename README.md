@@ -75,7 +75,7 @@ Files:
 
 1. <directory>/jobId.txt -- id of the job created
 2. <directory>/response.json -- list of files to download 
-3. <directory>/*.ndjson -- downloaded results of exports 
+3. <directory>/*.ndjson or *.ndjson.gz -- downloaded results of exports 
 
 Limitations:
 
@@ -116,7 +116,7 @@ Files:
 
 1. <directory>/jobId.txt -- id of the job created
 2. <directory>/response.json -- list of files to download
-3. <directory>/*.ndjson -- downloaded results of exports
+3. <directory>/*.ndjson or *.ndjson.gz -- downloaded results of exports
 
 Limitations:
 

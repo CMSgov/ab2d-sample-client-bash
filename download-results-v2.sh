@@ -36,6 +36,10 @@ do
         DIRECTORY=$2
         shift
         ;;
+       "--gzip")
+        export GZIP=true
+        shift
+        ;;
   esac
   shift
 done
@@ -83,7 +87,12 @@ COUNTER=0
 for i in $(seq -w 1 1000);
 do
     FILE_NAME="$DIRECTORY/$CONTRACT$i.ndjson"
+    ACCEPT_ENCODING="identity"
     URL="$COMMON_URL/$CONTRACT$i.ndjson"
+
+    if [ "$GZIP" = true] ; then
+        FILE_NAME="$FILE_NAME.gz"
+        ACCEPT_ENCODING='gzip'
 
     echo "Downloading file to $FILE_NAME from $URL"
 
@@ -96,6 +105,7 @@ do
                     -o "$FILE_NAME" \
                     -D "$FILE_DOWNLOAD_HEADERS" \
                     -H "Accept: application/fhir+ndjson" \
+                    -H "Accept-Encoding: $ACCEPT_ENCODING" \
                     -H "Authorization: Bearer ${BEARER_TOKEN}")
 
                 if [ "$HTTP_CODE" == 403 ]; then

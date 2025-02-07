@@ -8,8 +8,10 @@ then
 Arguments:\n
   -sandbox    -- if running against ab2d sandbox environment
   -prod       -- if running against ab2d production environment
+  -impl       -- if running against ab2d IMPL environment
   --auth      -- base64 encoded \"clientid:password\"
   --directory -- if you want files and job info saved to specific directory
+  --gzip      -- if you want to download files in compressed gzip format
   --since     -- if you only want claims data updated or filed after a certain date specify this parameter.
                  The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
                  Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
@@ -29,6 +31,10 @@ do
     "-sandbox")
       export IDP_URL="https://test.idp.idm.cms.gov/oauth2/aus2r7y3gdaFMKBol297/v1/token"
       API_URL_PT1="https://sandbox.ab2d.cms.gov/api/"
+      ;;
+    "-impl")
+      export IDP_URL="https://test.idp.idm.cms.gov/oauth2/aus2r7y3gdaFMKBol297/v1/token"
+      API_URL_PT1="https://impl.ab2d.cms.gov/api/"
       ;;
     "-prod")
       export IDP_URL="https://idm.cms.gov/oauth2/aus2ytanytjdaF9cr297/v1/token"
@@ -52,6 +58,10 @@ do
       ;;
     "--fhir")
       export FHIR_VERSION=$2
+      shift
+      ;;
+    "--gzip")
+      export GZIP=true
       shift
       ;;
   esac

@@ -203,4 +203,4 @@ and copy it to a file. Example file: `auth-token.base64`.
 the job id will be saved in `<directory>/jobId.txt`
 6. Run `./monitor-job.sh` which will monitor the state of the running job. When the job
 finished the full HTTP response will be saved to `<directory>/response.json`
-7. Run `./download-results.sh` to get the files. Running again will not overwrite the files
+7. Run `./download-results.sh` to get the files. Running again will not overwrite the files. You can speed up download times by requesting compressed files in gzip format with the optional `Accept-Encoding: gzip` header in your command. Afterward, decompress (unzip) the gzip files into NDJSON format.

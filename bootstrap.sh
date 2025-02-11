@@ -64,7 +64,6 @@ do
       ;;
     "--gzip")
       export AB2D_USE_GZIP='true'
-      shift
       ;;
   esac
   shift

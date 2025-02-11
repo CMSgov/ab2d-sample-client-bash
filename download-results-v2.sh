@@ -6,13 +6,12 @@ if [ "$1" == "--help" ]
 then
   printf \
 "Usage: \n
-  download-result-v2.sh --auth <passwordfile.base64> --contract <contract> --jobId <jobid> --directory <dir>\n
+  download-results-v2.sh --auth <passwordfile.base64> --contract <contract> --jobId <jobid> --directory <dir>\n
   Arguments:\n
     --auth      -- base64 encoded \"clientid:password\"
     --contract  -- contract number
     --jobid     -- job id
-    --directory -- if you want files saved to specific directory
-    --gzip      -- if you want to download files in compressed gzip format"
+    --directory -- if you want files saved to specific directory"
   exit 0;
 fi
 
@@ -35,10 +34,6 @@ do
         ;;
      "--directory")
         DIRECTORY=$2
-        shift
-        ;;
-       "-gzip")
-        export GZIP=true
         shift
         ;;
   esac
@@ -66,7 +61,8 @@ then
   exit 1
 fi
 
-IDP_URL="https://idm.cms.gov/oauth2/aus2ytanytjdaF9cr297/v1/token"
+#IDP_URL="https://idm.cms.gov/oauth2/aus2ytanytjdaF9cr297/v1/token"
+IDP_URL="https://test.idp.idm.cms.gov/oauth2/aus2r7y3gdaFMKBol297/v1/token"
 
 echo "Using okta url: $IDP_URL"
 echo "Saving data to: $DIRECTORY"
@@ -81,20 +77,15 @@ fi
 echo "Downloading results for job: $JOB_ID"
 
 FILE_DOWNLOAD_HEADERS="$DIRECTORY/file_download_headers.txt"
-COMMON_URL="https://api.ab2d.cms.gov/api/v2/fhir/Job/$JOB_ID/file"
+COMMON_URL="https://impl.ab2d.cms.gov/api/v2/fhir/Job/$JOB_ID/file"
+#COMMON_URL="https://api.ab2d.cms.gov/api/v2/fhir/Job/$JOB_ID/file"
 
 COUNTER=0
 
 for i in $(seq -w 1 1000);
 do
-    FILE_NAME="$DIRECTORY/$CONTRACT$i.ndjson"
-    ACCEPT_ENCODING="identity"
+    FILE_NAME="$DIRECTORY/$CONTRACT$i.ndjson.gz"
     URL="$COMMON_URL/$CONTRACT$i.ndjson"
-
-    if [ "$GZIP" = true ]; then
-        FILE_NAME="$FILE_NAME.gz"
-        ACCEPT_ENCODING='gzip'
-    fi
 
     echo "Downloading file to $FILE_NAME from $URL"
 
@@ -107,7 +98,7 @@ do
                     -o "$FILE_NAME" \
                     -D "$FILE_DOWNLOAD_HEADERS" \
                     -H "Accept: application/fhir+ndjson" \
-                    -H "Accept-Encoding: $ACCEPT_ENCODING" \
+                    -H "Accept-Encoding: gzip" \
                     -H "Authorization: Bearer ${BEARER_TOKEN}")
 
                 if [ "$HTTP_CODE" == 403 ]; then
@@ -123,7 +114,6 @@ do
                     cat "$FILE_NAME"
                     break 2
                 else
-                    gzip -f "$FILE_NAME"
                     COUNTER=$(( COUNTER +1 ))
                     break
                 fi

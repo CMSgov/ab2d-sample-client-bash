@@ -23,6 +23,8 @@ Arguments:\n
   exit 0;
 fi
 
+unset AB2D_USE_GZIP
+
 # Process command line args
 DIRECTORY=$(pwd)
 while (($#)) ;
@@ -60,8 +62,8 @@ do
       export FHIR_VERSION=$2
       shift
       ;;
-    "-gzip")
-      export GZIP=true
+    "--gzip")
+      export AB2D_USE_GZIP='true'
       shift
       ;;
   esac

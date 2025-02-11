@@ -21,10 +21,11 @@ do
     FILE_NAME="$DIRECTORY"/$(echo ${URL} | sed 's/.*.file.//')
     ACCEPT_ENCODING='identity'
 
-    if [ "$GZIP" = true]
+    if [ "$AB2D_USE_GZIP" = 'true' ]
     then
       FILE_NAME="$FILE_NAME.gz"
       ACCEPT_ENCODING='gzip'
+    fi
 
     echo "$URL"
 

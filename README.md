@@ -42,6 +42,7 @@ Arguments:
   --auth      -- the path to a file base64 containing the base64
                  credentials encoded as "clientid:password".
   --directory -- if you want files and job info saved to specific directory
+  --gzip      -- if you want to download files in compressed gzip format
   --since     -- if you only want claims data updated or filed after a certain date specify this parameter.
                  The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
                  Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
@@ -93,7 +94,7 @@ If you want to:
 Then run the following command
 
 ```
-source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --directory /opt/foo --fhir R4 --since 2020-04-01T09:00:00.000--05:00
+source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --directory /opt/foo --fhir R4 --since "2020-04-01T09:00:00.000-05:00"
 ./start-job.sh 
 ./monitor-job.sh 
 ./download-results.sh
@@ -134,7 +135,7 @@ If you want to:
 Then run the following command
 
 ```
-source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --directory /opt/foo --fhir R4 --since 2020-04-01T09:00:00.000--05:00 --until 2020-06-01T09:00:00.000--05:00
+source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --directory /opt/foo --fhir R4 --since "2020-04-01T09:00:00.000-05:00" --until "2020-06-01T09:00:00.000-05:00"
 ./start-job.sh 
 ./monitor-job.sh 
 ./download-results.sh
@@ -183,7 +184,7 @@ This is the preferred way to run a job.
 2. Set the `AUTH_FILE=<auth-file>`
 3. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
    and copy it to a file. Example file: `auth-token.base64`.
-4. Run `./run-job.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since 2020-02-13T00:00:00.000-05:00 --until 2020-06-01T00:00:00.000-05:00` to start,
+4. Run `./run-job.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since "2020-02-13T00:00:00.000-05:00" --until "2020-06-01T00:00:00.000-05:00"` to start,
    monitor, and download results from a job.
 
 ### Running Scripts Individually
@@ -198,7 +199,7 @@ This is for developer debugging purpose.
 2. Set the `AUTH_FILE=<auth-file>` 
 3. Create the AUTH token `echo -n "${OKTA_CLIENT_ID}:${OKTA_CLIENT_PASSWORD}" | base64 > $AUTH_FILE`
 and copy it to a file. Example file: `auth-token.base64`.
-4. Run `source bootstrap.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since 2020-02-13T00:00:00.000-05:00 --until 2020-06-01T00:00:00.000-05:00` to set environment variables for a job.
+4. Run `source bootstrap.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since "2020-02-13T00:00:00.000-05:00" --until "2020-06-01T00:00:00.000-05:00"` to set environment variables for a job.
 5. Run `./start-job.sh` to start a job. If successful a file containing
 the job id will be saved in `<directory>/jobId.txt`
 6. Run `./monitor-job.sh` which will monitor the state of the running job. When the job

@@ -4,7 +4,7 @@ if [ "$1" == "--help" ]
 then
   printf \
 "Usage: \n
-  <command> (-prod | -sandbox) --auth <passwordfile.base64> [--directory <dir>] [--since <since>] [--until <until>] --fhir (R4 | STU3)\n
+  <command> (-prod | -sandbox) --auth <passwordfile.base64> [--directory <dir>] [--gzip] [--since <since>] [--until <until>] --fhir (R4 | STU3)\n
 Arguments:\n
   -sandbox    -- if running against ab2d sandbox environment
   -prod       -- if running against ab2d production environment

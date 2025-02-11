@@ -187,6 +187,13 @@ This is the preferred way to run a job.
 4. Run `./run-job.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since "2020-02-13T00:00:00.000-05:00" --until "2020-06-01T00:00:00.000-05:00"` to start,
    monitor, and download results from a job.
 
+You can speed up download times by requesting compressed files in gzip format using the `--gzip` option:
+```
+./run-job.sh -prod --directory <directory> --auth $AUTH_FILE --fhir R4 --since "2020-02-13T00:00:00.000-05:00" --until "2020-06-01T00:00:00.000-05:00 --gzip
+```
+
+Afterward, decompress (unzip) the gzip files into NDJSON format.
+
 ### Running Scripts Individually
 
 This is for developer debugging purpose.
@@ -204,4 +211,4 @@ and copy it to a file. Example file: `auth-token.base64`.
 the job id will be saved in `<directory>/jobId.txt`
 6. Run `./monitor-job.sh` which will monitor the state of the running job. When the job
 finished the full HTTP response will be saved to `<directory>/response.json`
-7. Run `./download-results.sh` to get the files. Running again will not overwrite the files. You can speed up download times by requesting compressed files in gzip format with the optional `Accept-Encoding: gzip` header in your command. Afterward, decompress (unzip) the gzip files into NDJSON format.
+7. Run `./download-results.sh` to get the files. Running again will not overwrite the files. 

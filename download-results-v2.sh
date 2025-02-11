@@ -11,7 +11,8 @@ then
     --auth      -- base64 encoded \"clientid:password\"
     --contract  -- contract number
     --jobid     -- job id
-    --directory -- if you want files saved to specific directory"
+    --directory -- if you want files saved to specific directory
+    --gzip      -- if you want to download files in compressed gzip format"
   exit 0;
 fi
 
@@ -36,7 +37,7 @@ do
         DIRECTORY=$2
         shift
         ;;
-       "--gzip")
+       "-gzip")
         export GZIP=true
         shift
         ;;
@@ -90,9 +91,10 @@ do
     ACCEPT_ENCODING="identity"
     URL="$COMMON_URL/$CONTRACT$i.ndjson"
 
-    if [ "$GZIP" = true] ; then
+    if [ "$GZIP" = true ]; then
         FILE_NAME="$FILE_NAME.gz"
         ACCEPT_ENCODING='gzip'
+    fi
 
     echo "Downloading file to $FILE_NAME from $URL"
 

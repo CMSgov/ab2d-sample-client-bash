@@ -60,7 +60,7 @@ do
       export FHIR_VERSION=$2
       shift
       ;;
-    "--gzip")
+    "-gzip")
       export GZIP=true
       shift
       ;;

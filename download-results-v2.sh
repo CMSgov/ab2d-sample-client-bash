@@ -61,8 +61,7 @@ then
   exit 1
 fi
 
-#IDP_URL="https://idm.cms.gov/oauth2/aus2ytanytjdaF9cr297/v1/token"
-IDP_URL="https://test.idp.idm.cms.gov/oauth2/aus2r7y3gdaFMKBol297/v1/token"
+IDP_URL="https://idm.cms.gov/oauth2/aus2ytanytjdaF9cr297/v1/token"
 
 echo "Using okta url: $IDP_URL"
 echo "Saving data to: $DIRECTORY"
@@ -77,8 +76,7 @@ fi
 echo "Downloading results for job: $JOB_ID"
 
 FILE_DOWNLOAD_HEADERS="$DIRECTORY/file_download_headers.txt"
-COMMON_URL="https://impl.ab2d.cms.gov/api/v2/fhir/Job/$JOB_ID/file"
-#COMMON_URL="https://api.ab2d.cms.gov/api/v2/fhir/Job/$JOB_ID/file"
+COMMON_URL="https://api.ab2d.cms.gov/api/v2/fhir/Job/$JOB_ID/file"
 
 COUNTER=0
 

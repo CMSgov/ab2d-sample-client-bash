@@ -19,6 +19,13 @@ echo "List of files to download $URLS"
 for URL in ${URLS}
 do
     FILE_NAME="$DIRECTORY"/$(echo ${URL} | sed 's/.*.file.//')
+    ACCEPT_ENCODING='identity'
+
+    if [ "$AB2D_USE_GZIP" = 'true' ]
+    then
+      FILE_NAME="$FILE_NAME.gz"
+      ACCEPT_ENCODING='gzip'
+    fi
 
     echo "$URL"
 
@@ -27,6 +34,7 @@ do
         echo "$FILE_NAME already exists, skipping"
     else
         curl --header "Accept: application/fhir+ndjson" \
+          --header "Accept-Encoding: $ACCEPT_ENCODING" \
           --header "Authorization: Bearer ${BEARER_TOKEN}" \
           "$URL" > "$FILE_NAME"
 

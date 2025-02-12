@@ -6,7 +6,7 @@ if [ "$1" == "--help" ]
 then
   printf \
 "Usage: \n
-  download-result-v2.sh --auth <passwordfile.base64> --contract <contract> --jobId <jobid> --directory <dir>\n
+  download-results-v2.sh --auth <passwordfile.base64> --contract <contract> --jobId <jobid> --directory <dir>\n
   Arguments:\n
     --auth      -- base64 encoded \"clientid:password\"
     --contract  -- contract number
@@ -82,7 +82,7 @@ COUNTER=0
 
 for i in $(seq -w 1 1000);
 do
-    FILE_NAME="$DIRECTORY/$CONTRACT$i.ndjson"
+    FILE_NAME="$DIRECTORY/$CONTRACT$i.ndjson.gz"
     URL="$COMMON_URL/$CONTRACT$i.ndjson"
 
     echo "Downloading file to $FILE_NAME from $URL"
@@ -96,6 +96,7 @@ do
                     -o "$FILE_NAME" \
                     -D "$FILE_DOWNLOAD_HEADERS" \
                     -H "Accept: application/fhir+ndjson" \
+                    -H "Accept-Encoding: gzip" \
                     -H "Authorization: Bearer ${BEARER_TOKEN}")
 
                 if [ "$HTTP_CODE" == 403 ]; then
@@ -111,7 +112,6 @@ do
                     cat "$FILE_NAME"
                     break 2
                 else
-                    gzip -f "$FILE_NAME"
                     COUNTER=$(( COUNTER +1 ))
                     break
                 fi

@@ -4,12 +4,13 @@ if [ "$1" == "--help" ]
 then
   printf \
 "Usage: \n
-  <command> (-prod | -sandbox) --auth <passwordfile.base64> [--directory <dir>] [--since <since>] [--until <until>] --fhir (R4 | STU3)\n
+  <command> (-prod | -sandbox) --auth <passwordfile.base64> [--directory <dir>] [--gzip] [--since <since>] [--until <until>] --fhir (R4 | STU3)\n
 Arguments:\n
   -sandbox    -- if running against ab2d sandbox environment
   -prod       -- if running against ab2d production environment
   --auth      -- base64 encoded \"clientid:password\"
   --directory -- if you want files and job info saved to specific directory
+  --gzip      -- if you want to download files in compressed gzip format
   --since     -- if you only want claims data updated or filed after a certain date specify this parameter.
                  The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
                  Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
@@ -20,6 +21,8 @@ Arguments:\n
   --fhir      -- The FHIR version\n\n"
   exit 0;
 fi
+
+unset AB2D_USE_GZIP
 
 # Process command line args
 DIRECTORY=$(pwd)
@@ -53,6 +56,9 @@ do
     "--fhir")
       export FHIR_VERSION=$2
       shift
+      ;;
+    "--gzip")
+      export AB2D_USE_GZIP='true'
       ;;
   esac
   shift

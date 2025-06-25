@@ -1,7 +1,7 @@
 {
   "name": "ab2d-sample-client-bash",
-  "description": "rRepo contains sample Bash script",
-  "longDescription": "Our API Clients are open source. This repo contains sample Bash script which demonstrate how to pull data from the AB2D API Production environment.",
+  "description": "Sample Bash script",
+  "longDescription": "This repo contains sample Bash script which demonstrate how to pull data from the AB2D API Production environment.",
   "status": "ideation",
   "permissions": {
     "licenses": [
@@ -32,7 +32,7 @@
   "tags": [ "dsacms-tier3" ],
   "contact": {
     "email": "ab2d@cms.hhs.gov",
-    "name": "[A"
+    "name": ""
   },
   "feedbackMechanisms": ["https://github.com/CMSGov/ab2d-sample-client-bash/issues"],
   "localisation": "false",

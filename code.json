@@ -1,0 +1,49 @@
+{
+  "name": "ab2d-sample-client-bash",
+  "description": "rRepo contains sample Bash script",
+  "longDescription": "Our API Clients are open source. This repo contains sample Bash script which demonstrate how to pull data from the AB2D API Production environment.",
+  "status": "ideation",
+  "permissions": {
+    "licenses": [
+      {
+        "URL": "LICENSE",
+        "name": "CC0-1.0"
+      }
+    ],
+    "usageType": "openSource",
+    "exemptionText": ""
+  },
+  "organization": "Centers for Medicare & Medicaid Services",
+  "repositoryURL": "https://github.com/CMSGov/ab2d-sample-client-bash",
+  "repositoryHost": "github.com/CMSgov",
+  "repositoryVisibility": "public",
+  "vcs": "git",
+  "laborHours": [""],
+  "reuseFrequency": {
+    "forks": "0"
+  },
+  "platforms": [ "windows,mac,linux" ],
+  "categories": [ "healthcare" ],
+  "softwareType": "standalone/desktop",
+  "languages": [ "Bash" ],
+  "maintenance": "contract",
+  "contractNumber": "3",
+  "date": [""],
+  "tags": [ "dsacms-tier3" ],
+  "contact": {
+    "email": "ab2d@cms.hhs.gov",
+    "name": "[A"
+  },
+  "feedbackMechanisms": ["https://github.com/CMSGov/ab2d-sample-client-bash/issues"],
+  "localisation": "false",
+  "repositoryType": "APIs",
+  "userInput": "Yes",
+  "fismaLevel": "Low",
+  "group": "CMS",
+  "projects": [""],
+  "systems": [""],
+  "upstream": [""],
+  "subsetInHealthcare": ["Policy, Operational, Medicare, Medicaid"],
+  "userType": ["Providers"],
+  "maturityModelTier": 3
+}

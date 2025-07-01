@@ -14,7 +14,7 @@
     "exemptionText": ""
   },
   "organization": "Centers for Medicare & Medicaid Services",
-  "repositoryURL": "https://github.com/CMSGov/ab2d-sample-client-bash",
+  "repositoryURL": "https://github.com/CMSgov/ab2d-sample-client-bash",
   "repositoryHost": "github.com/CMSgov",
   "repositoryVisibility": "public",
   "vcs": "git",
@@ -34,7 +34,7 @@
     "email": "ab2d@cms.hhs.gov",
     "name": ""
   },
-  "feedbackMechanisms": ["https://github.com/CMSGov/ab2d-sample-client-bash/issues"],
+  "feedbackMechanisms": ["https://github.com/CMSgov/ab2d-sample-client-bash/issues"],
   "localisation": "false",
   "repositoryType": "APIs",
   "userInput": "Yes",

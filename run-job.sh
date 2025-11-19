@@ -17,6 +17,7 @@ echo "Using okta url: $IDP_URL"
 echo "Connecting to AB2D API at: $API_URL"
 echo "Saving data to: $DIRECTORY"
 echo "FHIR Version: $FHIR_VERSION"
+echo "AB2D Endpoint: $AB2D_ENDPOINT"
 
 echo "Starting job"
 

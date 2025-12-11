@@ -25,9 +25,14 @@ fi
 
 URL="${API_URL}/Patient/\$export?_outputFormat=application%2Ffhir%2Bndjson&_type=ExplanationOfBenefit"
 
-# If a date is provided
+# If a since date is provided
 if [ "$SINCE" != '' ]; then
   URL="$URL&_since=$SINCE"
+fi
+
+# If an until date is provided
+if [ "$UNTIL" != '' ]; then
+  URL="$URL&_until=$UNTIL"
 fi
 
 echo "Attempting to start job using $URL"

@@ -76,7 +76,7 @@ fi
 echo "Downloading results for job: $JOB_ID"
 
 FILE_DOWNLOAD_HEADERS="$DIRECTORY/file_download_headers.txt"
-COMMON_URL="https://api.ab2d.cms.gov/api/v2/fhir/Job/$JOB_ID/file"
+COMMON_URL="https://api.ab2d.cms.gov/api/$AB2D_ENDPOINT/fhir/Job/$JOB_ID/file"
 
 COUNTER=0
 

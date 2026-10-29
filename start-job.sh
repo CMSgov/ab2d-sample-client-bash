@@ -24,6 +24,10 @@ if [ "$UNTIL" != '' ]; then
   URL="$URL&_until=$UNTIL"
 fi
 
+if [ "$TYPE_FILTER" != '' ]; then
+  URL="$URL&_typeFilter=$TYPE_FILTER"
+fi
+
 echo "Attempting to start job using $URL"
 
 RESULT=$(curl "$URL" \
@@ -39,6 +43,12 @@ HTTP_CODE=$(echo "$RESULT" | grep "HTTP/" | awk  '{print $2}')
 if [ "$HTTP_CODE" != 202 ]
 then
     echo "Could not export job"
+
+    if [ "$HTTP_CODE" == 403 ] && [ "$AB2D_ENDPOINT" == "v3" ]
+    then
+      echo "A 403 here usually means V3 access has not been enabled for this contract yet. Contact the AB2D team."
+    fi
+
     exit 1
 else
     JOB=$(echo "$RESULT" | grep "\(content-location\|Content-Location\)" | sed 's/.*Job.//' | sed 's/..status//' | tr -d '[:space:]')

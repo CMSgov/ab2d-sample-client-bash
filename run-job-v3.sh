@@ -49,13 +49,6 @@ echo "Connecting to AB2D API at: $API_URL"
 echo "Saving data to: $DIRECTORY"
 echo "FHIR Version: $FHIR_VERSION (AB2D endpoint $AB2D_ENDPOINT)"
 
-V3_EARLIEST_SINCE_DATE="2026-04-01"
-
-if [ "$SINCE" != '' ] && [[ "${SINCE:0:10}" < "$V3_EARLIEST_SINCE_DATE" ]]
-then
-  echo "Warning: V3 has no claims data before ${V3_EARLIEST_SINCE_DATE}. The API will reject this _since value."
-fi
-
 # ------ Starting job
 echo "Starting job"
 # Parameters:

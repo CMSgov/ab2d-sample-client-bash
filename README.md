@@ -24,14 +24,14 @@ you can install it by typing `brew install jq`
 
 A simple client for starting a job in sandbox or production, monitor that job,
 and download the results. To prevent issues these scripts persist the job
-id and list of files generated. This client supports both R4 (v2) and STU3 (v1) of the standard.
+id and list of files generated. This client supports R4 (v2, v3) and STU3 (v1) of the standard.
 
 This script will not overwrite already existing export files.
 
 ```
 Usage: 
-  bootstrap (-prod | -sandbox) --auth <auth.base64> [--directory <dir>] [--since <since>] --fhir (STU3 | R4) [--ab2d-endpoint (v2 | v3)]
-  run-job (-prod | -sandbox) --auth <auth.base64> [--directory <dir>] [--since <since>] [--until <until>] --fhir (STU3 | R4) [--ab2d-endpoint (v2 | v3)]
+  bootstrap (-prod | -sandbox) --auth <auth.base64> [--directory <dir>] [--since <since>] --fhir (STU3 | R4) [--ab2d-endpoint (v2 | v3)] [--service-date <service-date>]
+  run-job (-prod | -sandbox) --auth <auth.base64> [--directory <dir>] [--since <since>] [--until <until>] --fhir (STU3 | R4) [--ab2d-endpoint (v2 | v3)] [--service-date <service-date>]
   start-job
   monitor-job
   download-results
@@ -46,12 +46,17 @@ Arguments:
   --since     -- if you only want claims data updated or filed after a certain date specify this parameter.
                  The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
                  Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
+                 For v3 the earliest accepted date is 2026-04-01T00:00:00.000-05:00.
   --until     -- if you only want claims data updated or filed before a certain date specify this parameter.
-                 This parameter is only available with version 2 (FHIR R4) of the API.
+                 This parameter is only available with version 2 and version 3 (FHIR R4) of the API.
                  The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
                  Example March 1, 2024 at 3 PM EST -> 2024-03-01T15:00:00.000-05:00
   --fhir      -- The FHIR version
   --ab2d-endpoint -- AB2D API endpoint version when using FHIR R4 (v2 | v3). Defaults to v2 if not specified.
+  --service-date -- if you only want claims data with a service date in a certain range specify this parameter.
+                 This parameter is only available with version 3 of the API.
+                 Uses FHIR date params, separate multiple params with a comma.
+                 Example gt2026-01-01 or gt2026-01-01,lt2026-02-01
 
 ```
 
@@ -64,6 +69,8 @@ For requests using FHIR R4, a default `_since` value is supplied if one is not p
 parameter is set to the creation date and time of a contract's last successfully searched and downloaded job.
 
 The earliest date that `_since` works for is February 13th, 2020. Specifically: `2020-02-13T00:00:00.000-05:00`.
+
+For V3 (R4V3), the earliest accepted date is April 1st, 2026. Specifically: `2026-04-01T00:00:00.000-05:00`.
 
 For requests using FHIR R4, a default `_since` value is supplied if one is not provided. The value of the default `_since` 
 parameter is set to the creation date and time of a contract’s last successfully searched and downloaded job.
@@ -106,7 +113,7 @@ Until:
 If you only want claims data updated or filed before a certain date use the `--until` parameter. The expected format follows the typical
 ISO date time format of `yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ`.
 
-This parameter is only available with V2 (FHIR R4). 
+This parameter is only available with V2 and V3 (FHIR R4). 
 If no `_until` date is specified or you use a date from the future, it will default to the current date and time.
 
 Examples:
@@ -142,6 +149,29 @@ source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --directory /opt/foo --f
 ./download-results.sh
  ```
 
+Service Date:
+
+If you only want claims data with a service date in a certain range use the `--service-date` parameter.
+The client sends it to the API as `_typeFilter=ExplanationOfBenefit?service-date=...`.
+
+This parameter is only available with V3 (`--fhir R4 --ab2d-endpoint v3`).
+Example:
+
+If you want to:
+1. Start a job running against sandbox using V3
+2. Use credentials in `my-orgs-creds.base64`
+3. Save all results for this job to the directory /opt/foo
+4. And only get claims with a service date in January 2026
+
+Then run the following command
+
+```
+source ./bootstrap.sh -sandbox --auth my-orgs-creds.base64 --directory /opt/foo --fhir R4 --ab2d-endpoint v3 --service-date "gt2026-01-01,lt2026-02-01"
+./start-job.sh 
+./monitor-job.sh 
+./download-results.sh
+ ```
+
 
 ## Creating the Base64 credentials file
 
@@ -162,8 +192,19 @@ source ./bootstrap.sh -prod --auth my-orgs-creds.base64 --directory /opt/foo --f
 3. monitor-job.sh: monitor a running job until it completes
 4. download-results.sh: download results from a job that has been run
 5. run-job.sh: aggregation of the first four scripts
+6. delete-job.sh: cancel the job saved in `<directory>/jobId.txt` (run `source bootstrap.sh ...` first)
+7. run-job-v3.sh: start, monitor, and download a V3 job in one script. `--fhir` and `--ab2d-endpoint` are not needed
+8. download-results-v3.sh: download the files of an already finished V3 job by job id and contract
 
-The last script combines the first four steps into one script.
+`run-job.sh` combines the first four steps into one script.
+
+### V3 troubleshooting
+
+1. A `403` when starting or downloading a V3 job usually means V3 access has not been enabled for
+   your contract yet. Contact the AB2D team.
+2. V3 has no claims data before `2026-04-01T00:00:00.000-05:00`. `bootstrap.sh` prints a warning if `--since` is earlier.
+3. A V3 job can finish with no files when nothing matches `--since`, `--until`, or `--service-date`.
+   In that case `response.json` has an empty `output` list and nothing is downloaded.
 
 ### Other resources included
 

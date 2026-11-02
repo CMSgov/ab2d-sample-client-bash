@@ -46,7 +46,7 @@ Arguments:
   --since     -- if you only want claims data updated or filed after a certain date specify this parameter.
                  The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
                  Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
-                 For v3 the earliest accepted date is 2026-04-01T00:00:00.000-05:00.
+                 For v3 the earliest accepted date is 2026-03-26T00:00:00.000-05:00.
   --until     -- if you only want claims data updated or filed before a certain date specify this parameter.
                  This parameter is only available with version 2 and version 3 (FHIR R4) of the API.
                  The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
@@ -70,7 +70,7 @@ parameter is set to the creation date and time of a contract's last successfully
 
 The earliest date that `_since` works for is February 13th, 2020. Specifically: `2020-02-13T00:00:00.000-05:00`.
 
-For V3 (R4V3), the earliest accepted date is April 1st, 2026. Specifically: `2026-04-01T00:00:00.000-05:00`.
+For V3 (R4V3), the earliest accepted date is March 26th, 2026. Specifically: `2026-03-26T00:00:00.000-05:00`.
 
 For requests using FHIR R4, a default `_since` value is supplied if one is not provided. The value of the default `_since` 
 parameter is set to the creation date and time of a contract’s last successfully searched and downloaded job.
@@ -202,7 +202,7 @@ source ./bootstrap.sh -sandbox --auth my-orgs-creds.base64 --directory /opt/foo 
 
 1. A `403` when starting or downloading a V3 job usually means V3 access has not been enabled for
    your contract yet. Contact the AB2D team.
-2. V3 has no claims data before `2026-04-01T00:00:00.000-05:00`. `bootstrap.sh` prints a warning if `--since` is earlier.
+2. V3 has no claims data before `2026-03-26T00:00:00.000-05:00`. `bootstrap.sh` prints a warning if `--since` is earlier.
 3. A V3 job can finish with no files when nothing matches `--since`, `--until`, or `--service-date`.
    In that case `response.json` has an empty `output` list and nothing is downloaded.
 

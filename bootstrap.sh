@@ -15,7 +15,7 @@ Arguments:\n
   --since         -- if you only want claims data updated or filed after a certain date specify this parameter.
                      The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
                      Example March 1, 2020 at 3 PM EST -> 2020-03-01T15:00:00.000-05:00
-                     For v3 the earliest accepted date is 2026-04-01T00:00:00.000-05:00.
+                     For v3 the earliest accepted date is 2026-03-26T00:00:00.000-05:00.
   --until         -- if you only want claims data updated or filed before a certain date specify this parameter.
                      This parameter is only available with version 2 and version 3 (FHIR R4) of the API.
                      The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
@@ -137,7 +137,7 @@ then
 fi
 
 # SINCE is URL encoded above, so only the leading yyyy-MM-dd is compared
-V3_EARLIEST_SINCE_DATE="2026-04-01"
+V3_EARLIEST_SINCE_DATE="2026-03-26"
 if [ "${AB2D_ENDPOINT}" == "v3" ] && [ "${SINCE}" != "" ] && [[ "${SINCE:0:10}" < "${V3_EARLIEST_SINCE_DATE}" ]]
 then
   printf "Warning: V3 has no claims data before %s. The API will reject this _since value.\n" "${V3_EARLIEST_SINCE_DATE}"

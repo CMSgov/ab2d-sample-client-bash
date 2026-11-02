@@ -12,7 +12,7 @@ Arguments:\n
   --gzip         -- if you want to download files in compressed gzip format
   --since        -- if you only want claims data updated or filed after a certain date specify this
                     parameter. The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
-                    V3 has no claims data before 2026-04-01T00:00:00.000-05:00.
+                    V3 has no claims data before 2026-03-26T00:00:00.000-05:00.
                     Example June 16, 2026 at midnight UTC -> 2026-06-16T00:00:00.000-00:00
   --until        -- if you only want claims data updated or filed before a certain date specify this
                     parameter. The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.

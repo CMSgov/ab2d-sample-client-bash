@@ -112,11 +112,6 @@ then
       echo  # Add newline after response output
     fi
 
-    if [ "$HTTP_CODE" == 403 ]
-    then
-      echo "A 403 here usually means V3 access has not been enabled for this contract yet. Contact the AB2D team."
-    fi
-
     exit 1
 else
     JOB=$(grep "\(content-location\|Content-Location\)" "$PATIENT_HEADERS_FILE" | sed 's/.*Job.//' | sed 's/..status//' | tr -d '[:space:]')
@@ -139,8 +134,8 @@ echo -n "" > "$JOB_RESPONSE_FILE"
 
 JOB_JSON=""
 COUNTER=0
-# V3 answers both an expired token and a contract without V3 access with a 403, so give up on a
-# 403 that a fresh token did not fix rather than refreshing forever.
+# Refresh the token on a 403, but give up on a 403 that a fresh token did not fix rather than
+# refreshing forever.
 FORBIDDEN_COUNT=0
 
 while [ "$JOB_JSON" == '' ]; do
@@ -165,7 +160,7 @@ while [ "$JOB_JSON" == '' ]; do
         FORBIDDEN_COUNT=$(( FORBIDDEN_COUNT +1 ))
 
         if [ "$FORBIDDEN_COUNT" -gt 1 ]; then
-            echo "Still forbidden after refreshing the token. V3 access may not be enabled for this contract."
+            echo "Still forbidden after refreshing the token. Contact the AB2D team."
             exit 1
         fi
 
@@ -223,7 +218,7 @@ for URL in $URLS; do
                 FORBIDDEN_COUNT=$(( FORBIDDEN_COUNT +1 ))
 
                 if [ "$FORBIDDEN_COUNT" -gt 1 ]; then
-                    echo "Still forbidden after refreshing the token. V3 access may not be enabled for this contract."
+                    echo "Still forbidden after refreshing the token. Contact the AB2D team."
                     cat "$FILE_DOWNLOAD_HEADERS"
                     break 2
                 fi

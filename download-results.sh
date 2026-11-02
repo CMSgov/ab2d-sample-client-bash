@@ -47,11 +47,6 @@ do
             echo
             # Remove the error body so a re-run does not mistake it for a downloaded file
             rm -f "$FILE_NAME"
-
-            if [ "$HTTP_CODE" == 403 ] && [ "$AB2D_ENDPOINT" == "v3" ]
-            then
-                echo "A 403 here usually means V3 access has not been enabled for this contract yet. Contact the AB2D team."
-            fi
         else
             COUNTER=$(( COUNTER +1 ))
         fi

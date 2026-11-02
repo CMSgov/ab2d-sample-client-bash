@@ -200,10 +200,8 @@ source ./bootstrap.sh -sandbox --auth my-orgs-creds.base64 --directory /opt/foo 
 
 ### V3 troubleshooting
 
-1. A `403` when starting or downloading a V3 job usually means V3 access has not been enabled for
-   your contract yet. Contact the AB2D team.
-2. V3 has no claims data before `2026-03-26T00:00:00.000-05:00`. `bootstrap.sh` prints a warning if `--since` is earlier.
-3. A V3 job can finish with no files when nothing matches `--since`, `--until`, or `--service-date`.
+1. V3 has no claims data before `2026-03-26T00:00:00.000-05:00`. `bootstrap.sh` prints a warning if `--since` is earlier.
+2. A V3 job can finish with no files when nothing matches `--since`, `--until`, or `--service-date`.
    In that case `response.json` has an empty `output` list and nothing is downloaded.
 
 ### Other resources included

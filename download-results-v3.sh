@@ -108,7 +108,7 @@ do
                     FORBIDDEN_COUNT=$(( FORBIDDEN_COUNT +1 ))
 
                     if [ "$FORBIDDEN_COUNT" -gt 1 ]; then
-                        echo "Still forbidden after refreshing the token. V3 access may not be enabled for this contract."
+                        echo "Still forbidden after refreshing the token. Contact the AB2D team."
                         cat "$FILE_DOWNLOAD_HEADERS"
                         break 2
                     fi

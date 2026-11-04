@@ -12,7 +12,7 @@ Arguments:\n
   --gzip         -- if you want to download files in compressed gzip format
   --since        -- if you only want claims data updated or filed after a certain date specify this
                     parameter. The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
-                    V3 has no claims data before 2026-04-01T00:00:00.000-05:00.
+                    V3 has no claims data before 2026-03-26T00:00:00.000-05:00.
                     Example June 16, 2026 at midnight UTC -> 2026-06-16T00:00:00.000-00:00
   --until        -- if you only want claims data updated or filed before a certain date specify this
                     parameter. The expected format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX+/-ZZ:ZZ.
@@ -48,13 +48,6 @@ echo "Using okta url: $IDP_URL"
 echo "Connecting to AB2D API at: $API_URL"
 echo "Saving data to: $DIRECTORY"
 echo "FHIR Version: $FHIR_VERSION (AB2D endpoint $AB2D_ENDPOINT)"
-
-V3_EARLIEST_SINCE_DATE="2026-04-01"
-
-if [ "$SINCE" != '' ] && [[ "${SINCE:0:10}" < "$V3_EARLIEST_SINCE_DATE" ]]
-then
-  echo "Warning: V3 has no claims data before ${V3_EARLIEST_SINCE_DATE}. The API will reject this _since value."
-fi
 
 # ------ Starting job
 echo "Starting job"
@@ -119,11 +112,6 @@ then
       echo  # Add newline after response output
     fi
 
-    if [ "$HTTP_CODE" == 403 ]
-    then
-      echo "A 403 here usually means V3 access has not been enabled for this contract yet. Contact the AB2D team."
-    fi
-
     exit 1
 else
     JOB=$(grep "\(content-location\|Content-Location\)" "$PATIENT_HEADERS_FILE" | sed 's/.*Job.//' | sed 's/..status//' | tr -d '[:space:]')
@@ -146,8 +134,8 @@ echo -n "" > "$JOB_RESPONSE_FILE"
 
 JOB_JSON=""
 COUNTER=0
-# V3 answers both an expired token and a contract without V3 access with a 403, so give up on a
-# 403 that a fresh token did not fix rather than refreshing forever.
+# Refresh the token on a 403, but give up on a 403 that a fresh token did not fix rather than
+# refreshing forever.
 FORBIDDEN_COUNT=0
 
 while [ "$JOB_JSON" == '' ]; do
@@ -172,7 +160,7 @@ while [ "$JOB_JSON" == '' ]; do
         FORBIDDEN_COUNT=$(( FORBIDDEN_COUNT +1 ))
 
         if [ "$FORBIDDEN_COUNT" -gt 1 ]; then
-            echo "Still forbidden after refreshing the token. V3 access may not be enabled for this contract."
+            echo "Still forbidden after refreshing the token. Contact the AB2D team."
             exit 1
         fi
 
@@ -230,7 +218,7 @@ for URL in $URLS; do
                 FORBIDDEN_COUNT=$(( FORBIDDEN_COUNT +1 ))
 
                 if [ "$FORBIDDEN_COUNT" -gt 1 ]; then
-                    echo "Still forbidden after refreshing the token. V3 access may not be enabled for this contract."
+                    echo "Still forbidden after refreshing the token. Contact the AB2D team."
                     cat "$FILE_DOWNLOAD_HEADERS"
                     break 2
                 fi

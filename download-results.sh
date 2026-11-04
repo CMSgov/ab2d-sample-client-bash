@@ -33,14 +33,27 @@ do
     then
         echo "$FILE_NAME already exists, skipping"
     else
-        curl --header "Accept: application/fhir+ndjson" \
+        HTTP_CODE=$(curl --header "Accept: application/fhir+ndjson" \
           --header "Accept-Encoding: $ACCEPT_ENCODING" \
           --header "Authorization: Bearer ${BEARER_TOKEN}" \
-          "$URL" > "$FILE_NAME"
+          -w "%{http_code}" \
+          -o "$FILE_NAME" \
+          "$URL")
 
-        COUNTER=$(( COUNTER +1 ))
+        if [ "$HTTP_CODE" != 200 ]
+        then
+            echo "Error downloading file. Status code: $HTTP_CODE"
+            cat "$FILE_NAME"
+            echo
+            # Remove the error body so a re-run does not mistake it for a downloaded file
+            rm -f "$FILE_NAME"
+        else
+            COUNTER=$(( COUNTER +1 ))
+        fi
 
         echo "Updating bearer token"
         BEARER_TOKEN=$(fn_get_token "$IDP_URL" "$AUTH_FILE")
     fi
 done
+
+echo "Done. Total number of files downloaded: $COUNTER"

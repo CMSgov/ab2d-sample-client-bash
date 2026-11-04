@@ -47,6 +47,12 @@ do
         echo "$RESPONSE"
         URLS=$(echo "$RESPONSE" | grep ExplanationOfBenefit)
 
+        # A finished job with no matching claims (e.g. narrow --since or --service-date) has an empty output list
+        if [ "$HTTP_CODE" == 200 ]
+        then
+            break
+        fi
+
         # Sleep and increment counter
         if [ "$URLS" == '' ]
         then
